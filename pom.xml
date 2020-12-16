@@ -33,14 +33,6 @@
             <version>1.4.200</version>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.jboss.weld.se</groupId>-->
-<!--            <artifactId>weld-se-core</artifactId>-->
-<!--            &lt;!&ndash; See for versions: https://weld.cdi-spec.org/documentation/#9 &ndash;&gt;-->
-<!--            <version>2.4.8.Final</version>       &lt;!&ndash;contains CDI1.2&ndash;&gt;-->
-<!--            &lt;!&ndash;<version>3.1.2.Final</version>&ndash;&gt;&lt;!&ndash;contains CDI2.0&ndash;&gt;-->
-<!--            <sco-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -63,6 +55,18 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>3.16.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.5.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>3.5.11</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -108,6 +112,12 @@
             <version>0.4</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>eclipselink</artifactId>
+            <version>3.0.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
