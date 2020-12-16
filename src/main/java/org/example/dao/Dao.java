@@ -1,33 +1,31 @@
 package org.example.dao;
 
-import org.example.domain.User;
-
-import javax.persistence.*;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.ws.rs.BadRequestException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Collection;
 
 public abstract class Dao<E> {
 
-//    @PersistenceContext(name = "prickAds") // Container managed persistence context
-//    protected EntityManager em;   ff vragen aan bram
-    EntityManagerFactory emf = Persistence.createEntityManagerFactory("prickAds");
-    protected EntityManager em = emf.createEntityManager();
+    @PersistenceContext
+    EntityManager em;
 
     public Collection<E> getAll() {
         return em.createNamedQuery(typeSimple() + ".findAll", E()).getResultList();
     }
 
-    public E getById(long id){
-        return em.createQuery("select e from " + typeSimple() + " e where e.id = :id", E()).setParameter("id",id).getSingleResult();
-    }
-
-    public Collection<E> get(String q) {
-        return null;
+    public E getById(long id) {
+        return em.createQuery("select e from " + typeSimple() + " e where e.id = :id", E()).setParameter("id", id).getSingleResult();
     }
 
     public boolean add(E c) {
-        em.persist(c);
-        return true; // Fix me ...
+        try {
+            em.persist(c);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void remove(long id) {
@@ -35,11 +33,9 @@ public abstract class Dao<E> {
         em.remove(e);
     }
 
-    public boolean update(long id, E c) {
-        return false;
+    private String typeSimple() {
+        return E().getSimpleName();
     }
-
-    private String typeSimple() { return E().getSimpleName(); }
 
     /**
      * @return a class instance of the first generic type parameter (E) of this Dao,

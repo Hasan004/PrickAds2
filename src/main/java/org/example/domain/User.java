@@ -1,13 +1,16 @@
 package org.example.domain;
 
 import lombok.Data;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
-@NamedQuery(name = "User.findAll", query = "SELECT u FROM User u")
+@NamedQuery(name = "User.findAll", query = "SELECT distinct u FROM User u left outer join u.advertenties a")
+//@JsonIgnoreProperties({"advertenties"})
 public class User {
-
     @Id
     @GeneratedValue
     private long id;
@@ -26,10 +29,21 @@ public class User {
 
     private boolean isAkkoord;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Advertentie> advertenties = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Advertentie> advertenties = new ArrayList<>();
 
     public User() {
+    }
+
+    public User(long id, String naam, String password, String email, String adres, String postcode, String woonplaats, boolean isAkkoord) {
+        this.id = id;
+        this.naam = naam;
+        this.password = password;
+        this.email = email;
+        this.adres = adres;
+        this.postcode = postcode;
+        this.woonplaats = woonplaats;
+        this.isAkkoord = isAkkoord;
     }
 
     public User(String naam, String password, String email, String adres, String postcode, String woonplaats, boolean isAkkoord) {
@@ -41,5 +55,4 @@ public class User {
         this.woonplaats = woonplaats;
         this.isAkkoord = isAkkoord;
     }
-
 }

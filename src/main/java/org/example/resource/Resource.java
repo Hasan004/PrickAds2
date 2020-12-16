@@ -1,9 +1,12 @@
 package org.example.resource;
 
 import org.example.dao.Dao;
+
 import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import java.util.Collection;
-import java.util.List;
+
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 public abstract class Resource<E> {
 
@@ -20,29 +23,22 @@ public abstract class Resource<E> {
     }
 
     @POST
-    public E post(E e) {
+    public Response post(E e) {
         if (dao.add(e)) {
-            return e;
+                return Response.ok(e).build();
         } else {
             throw new RuntimeException("Post " + e + " failed.");
         }
     }
 
     @Path("{id}") @DELETE
-    public void delete(@PathParam("id") long id) {
+    public Response delete(@PathParam("id") long id) {
         try{
             dao.remove(id);
+            return Response.ok(id).build();
         }catch(Exception e){
-            throw new BadRequestException("Delete with id " + id + " failed.");
+            return Response.status(UNAUTHORIZED).build();
         }
     }
 
-    @Path("{id}") @PUT
-    public E put(@PathParam("id") long id, E e) {
-        if (dao.update(id, e)) {
-            return e;
-        } else {
-            throw new RuntimeException("Update " + e + " failed.");
-        }
-    }
 }

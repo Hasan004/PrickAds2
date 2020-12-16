@@ -1,20 +1,16 @@
 package org.example.resource;
 
+import org.example.dao.Dao;
 import org.example.dao.UserDao;
 import org.example.domain.User;
-import org.example.dao.Dao;
 import org.example.util.JsonResource;
+
 import javax.inject.Inject;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
-import java.util.List;
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
-import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 @Path("/users")
 public class UserResource extends Resource<User> implements JsonResource {
@@ -28,12 +24,27 @@ public class UserResource extends Resource<User> implements JsonResource {
             String email = u.getEmail();
             String password = u.getPassword();
 
-            getDao().login(email, password);
+            User currentUser = getDao().login(email, password);
             System.out.println("gelukt");
 
-            return Response.ok().header(AUTHORIZATION, "Bearer ").build();
+            return Response.ok( currentUser).build();
         } catch (Exception e) {
             System.out.println("niet gelukt");
+            return Response.status(UNAUTHORIZED).build();
+        }
+    }
+
+    @Override
+    @POST
+    public Response post(User user) {
+        User emailExists = getDao().getUserByEmail(user.getEmail());
+        if (emailExists == null) {
+            if (dao.add(user)) {
+                return Response.ok(user).build();
+            } else {
+                throw new RuntimeException("Post " + user + " failed.");
+            }
+        }else{
             return Response.status(UNAUTHORIZED).build();
         }
     }
